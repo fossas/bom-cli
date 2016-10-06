@@ -1,0 +1,2 @@
+#!/bin/sh
+mvn dependency:list | grep -E "\[INFO\]    .+\:.+\:" -o | sed 's/\[INFO\]    /mvn+/' | sed 's/.$//' | sed 's/:jar:/$/'  | sed 's/:war:/$/'  | sed 's/:java-source:/$/' 
