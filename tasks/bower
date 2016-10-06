@@ -1,0 +1,2 @@
+#!/bin/sh
+bower list . | tail +3 | grep -E "\w.+#\S+" -o | sed 's/^/bower\+/' | sed 's/#/$/' | sort | uniq
