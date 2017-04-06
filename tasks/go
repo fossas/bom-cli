@@ -1,0 +1,15 @@
+#!/bin/sh
+GODEPSHANDLERBIN=$( dirname $0 )/.go/godeps.js
+GOVENDORHANDLERBIN=$( dirname $0 )/.go/govendor.js
+GOPATH=${GOPATH-/usr/local/lib/go}
+GOIMPORTPATH=${GOIMPORTPATH-$( node -e "console.log(require('path').relative('${GOPATH}', '`pwd`' ))" )}
+
+# Find every thing
+# ( for directory in $( find . -path ./vendor -prune -o -name '*.go' -exec dirname {} \; | sort -u ); do
+#   pushd $directory &> /dev/null;
+#   go list -f '{{ .Deps }}' | tr -d '[]' | tr ' ' '\n';
+#   popd &> /dev/null;
+# done ) | sort -u | sed 's/^/go\+/' | tr -d ' ' | node $( dirname $0 )/.go/godeps.js ${GOIMPORTPATH} | node $( dirname $0 )/.go/govendor.js ${GOIMPORTPATH}
+
+# Find one thing
+go list -f '{{ .Deps }}' | tr -d '[]' | tr ' ' '\n' | sort -u | sed 's/^/go\+/' | node ${GODEPSHANDLERBIN} ${GOPATH} ${GOIMPORTPATH} | node ${GOVENDORHANDLERBIN} ${GOPATH} ${GOIMPORTPATH}
