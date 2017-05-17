@@ -1,2 +1,8 @@
 #!/bin/sh
-mvn dependency:list | grep -E "\[INFO\]    .+\:.+\:" -o | sed 's/\[INFO\]    /mvn+/' | sed 's/.$//' | sed 's/:jar:/$/'  | sed 's/:war:/$/'  | sed 's/:java-source:/$/' | sort | uniq
+tmp=${TMPDIR:-/tmp}/mvn.bom-cli.$$
+if mvn dependency:list > $tmp;
+then
+  cat $tmp | grep -E "\[INFO\]    .+\:.+\:" -o | sed 's/\[INFO\]    /mvn+/' | sed 's/.$//' | sed 's/:jar:/$/'  | sed 's/:war:/$/'  | sed 's/:java-source:/$/' | sort -u
+else
+  exit 1;
+fi;
