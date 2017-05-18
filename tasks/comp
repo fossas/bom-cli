@@ -1,0 +1,3 @@
+#!/bin/sh
+composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress --no-suggest --ignore-platform-reqs &>/dev/null
+composer show | awk '{ print "comp+"$1"$"$2}' | sort | uniq
