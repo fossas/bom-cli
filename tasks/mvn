@@ -1,8 +1,34 @@
 #!/bin/sh
 tmp=${TMPDIR:-/tmp}/mvn.bom-cli.$$
-if mvn dependency:list > $tmp;
-then
-  cat $tmp | grep -E "\[INFO\]    .+\:.+\:" -o | sed 's/\[INFO\]    /mvn+/' | sed 's/.$//' | sed 's/:jar:/$/'  | sed 's/:war:/$/'  | sed 's/:java-source:/$/' | sort -u
+m2repo=${TMPDIR:-/tmp}/mvn.bom-cli.$$.m2repo
+srclibcache=${TMPDIR:-/tmp}/mvn.bom-cli.$$.srclibcache
+
+setup() {
+  if [[ -e .m2-srclib ]]; then
+    mv .m2-srclib $m2repo
+  fi;
+
+  if [[ -e .srclib-cache ]]; then
+    mv .srclib-cache $srclibcache
+  fi;
+}
+
+teardown() {
+  if [[ -e $m2repo ]]; then
+    mv $m2repo .m2-srclib
+  fi;
+
+  if [[ -e $srclibcache ]]; then
+    mv $srclibcache .srclib-cache
+  fi;
+}
+
+setup;
+
+if mvn clean install -DskipTests -Drat.skip=true &> /dev/null && mvn dependency:list > $tmp; then
+  cat $tmp | grep -E "\[INFO\]    .+\:.+\:" -o | sed 's/\[INFO\]    /mvn+/' | sed 's/.$//' | sed 's/:jar:/$/'  | sed 's/:war:/$/'  | sed 's/:java-source:/$/' | sort -u;
+  teardown;
 else
+  teardown;
   exit 1;
 fi;
