@@ -4,23 +4,13 @@ m2repo=${TMPDIR:-/tmp}/mvn.bom-cli.$$.m2repo
 srclibcache=${TMPDIR:-/tmp}/mvn.bom-cli.$$.srclibcache
 
 setup() {
-  if [[ -e .m2-srclib ]]; then
-    mv .m2-srclib $m2repo
-  fi;
-
-  if [[ -e .srclib-cache ]]; then
-    mv .srclib-cache $srclibcache
-  fi;
+  [ -e .m2-srclib ] && mv .m2-srclib $m2repo
+  [ -e .srclib-cache ] && mv .srclib-cache $srclibcache
 }
 
 teardown() {
-  if [[ -e $m2repo ]]; then
-    mv $m2repo .m2-srclib
-  fi;
-
-  if [[ -e $srclibcache ]]; then
-    mv $srclibcache .srclib-cache
-  fi;
+  [ -e $m2repo ] && mv $m2repo .m2-srclib
+  [ -e $srclibcache ] && mv $srclibcache .srclib-cache
 }
 
 setup;
