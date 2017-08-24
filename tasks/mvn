@@ -15,7 +15,7 @@ teardown() {
 
 setup;
 
-if mvn clean install -DskipTests -Drat.skip=true &> /dev/null && mvn dependency:list > $tmp; then
+if mvn clean install -DskipTests -Drat.skip=true &> /dev/null && mvn dependency:list > $tmp 2> /dev/null; then
   cat $tmp | grep -E "\[INFO\]    .+\:.+\:" -o | sed 's/\[INFO\]    /mvn+/' | sed 's/.$//' | sed 's/:jar:/$/'  | sed 's/:war:/$/'  | sed 's/:java-source:/$/' | sort -u;
   teardown;
 else
