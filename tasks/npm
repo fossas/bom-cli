@@ -1,4 +1,6 @@
 #!/bin/sh
-npm i --silent --production >/dev/null 2>&1
-# https://unix.stackexchange.com/questions/187889/how-do-i-replace-the-last-occurrence-of-a-character-in-a-string-using-sed
-npm ls 2>/dev/null | tail -n +2 | grep -E "\S+@\S+" -o | sed 's/^/npm\+/' | sed 's/\(.*\)@/\1$/' | sort | uniq
+if npm i --silent --production >/dev/null 2>&1; then
+	npm ls 2>/dev/null | tail -n +2 | grep -E "\S+@\S+" -o | sed 's/^/npm\+/' | sed 's/\(.*\)@/\1$/' | sort | uniq;
+else
+	exit 1;
+fi
